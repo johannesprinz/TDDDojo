@@ -21,7 +21,7 @@ stages:
         variables:
           patch: $[counter(variables['minor'], 0)]
         steps:
-          - bash: |
+          - bash: | 
               echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
             name: SetMainBuildName
   - stage:
@@ -33,11 +33,11 @@ stages:
           prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
           brpatch: $[counter(variables['build.sourcebranchname'], 0)]
           steps:
-            - bash: |
+            - bash: | 
                 echo "##vso[build.updatebuildnumber]$(major).$(minor)-PullRequest.$(prpatch)"
               condition: eq(variables['Build.Reason'], 'PullRequest')
               name: SetPRBuildName
-            - bash: |
+            - bash: | 
                 echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
               condition: ne(variables['Build.Reason'], 'PullRequest')
               name: SetBranchBuildName
