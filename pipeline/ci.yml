@@ -3,17 +3,71 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+variables:
+  major: 0
+  minor: 0
+
+name: $(major).$(minor)$(Rev:.r)
+
 trigger:
   - main
 
-pool:
-  vmImage: "windows-latest"
-# vmImage: 'ubuntu-latest'
-
-steps:
-  - task: DotNetCoreCLI@2
-    displayName: "Test"
-    inputs:
-      command: "test"
-      publishTestResults: true
-      arguments: '--collect:"XPlat Code Coverage"'
+stages:
+  - stage:
+    displayName: "Set main version"
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: SetMainVersion
+        variables:
+          patch: $[counter(variables['minor'], 0)]
+        steps:
+          - bash: |
+              echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
+            name: SetMainBuildName
+  - stage:
+    displayName: "Set branch version"
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: SetBranchVersion
+        variables:
+          prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
+          brpatch: $[counter(variables['build.sourcebranchname'], 0)]
+          steps:
+            - bash: |
+                echo "##vso[build.updatebuildnumber]$(major).$(minor)-PullRequest.$(prpatch)"
+              condition: eq(variables['Build.Reason'], 'PullRequest')
+              name: SetPRBuildName
+            - bash: |
+                echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
+              condition: ne(variables['Build.Reason'], 'PullRequest')
+              name: SetBranchBuildName
+  - stage: BuildAndTest
+    displayName: Build and test
+    jobs:
+      - job: BuildAndTestWindows
+        displayName: Build and test
+        pool:
+          vmImage: ˙'windows-latest'
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: "Test and publish"
+            inputs:
+              command: "test"
+              publishTestResults: true
+              arguments: '--collect:"Code Coverage"'
+      - job: BuildAndTestLinux
+        displayName: Build and test
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: "Test"
+            inputs:
+              command: "test"
+              arguments: '-v=normal /p:CollectCoverage=true  /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\ /p:CoverletOutputFormat=json%2ccobertura /p:MergeWith=$(Build.SourcesDirectory)\TestResults\Coverage\coverage.json'
+          - task: PublishCodeCoverageResults@1
+            displayName: "Publish"
+            inputs:
+              codeCoverageTool: cobertura
+              summaryFileLocation: $(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml
+              reportDirectory: '$(Build.SourcesDirectory)\TestResults\Coverage'
