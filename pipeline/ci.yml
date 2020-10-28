@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 variables:
   major: 0
   minor: 0
@@ -14,18 +9,17 @@ trigger:
 
 stages:
   - stage:
-    displayName: "Set main version"
+    displayName: 'Set main version'
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - job: SetMainVersion
         variables:
           patch: $[counter(variables['minor'], 0)]
         steps:
-          - bash: | 
-              echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
+          - bash: echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
             name: SetMainBuildName
   - stage:
-    displayName: "Set branch version"
+    displayName: 'Set branch version'
     condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - job: SetBranchVersion
@@ -33,19 +27,17 @@ stages:
           prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
           brpatch: $[counter(variables['build.sourcebranchname'], 0)]
           steps:
-            - bash: | 
-                echo "##vso[build.updatebuildnumber]$(major).$(minor)-PullRequest.$(prpatch)"
+            - bash: echo "##vso[build.updatebuildnumber]$(major).$(minor)-PullRequest.$(prpatch)"
               condition: eq(variables['Build.Reason'], 'PullRequest')
               name: SetPRBuildName
-            - bash: | 
-                echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
+            - bash: echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
               condition: ne(variables['Build.Reason'], 'PullRequest')
               name: SetBranchBuildName
   - stage: BuildAndTest
-    displayName: Build and test
+    displayName: 'Build and test'
     jobs:
       - job: BuildAndTestWindows
-        displayName: Build and test
+        displayName: 'Build and test on windows for PR coverage status checks'
         pool:
           vmImage: ˙'windows-latest'
         steps:
@@ -56,7 +48,7 @@ stages:
               publishTestResults: true
               arguments: '--collect:"Code Coverage"'
       - job: BuildAndTestLinux
-        displayName: Build and test
+        displayName: 'Build and test on linux to get full coverage report'
         pool:
           vmImage: "ubuntu-latest"
         steps:
