@@ -1,5 +1,9 @@
 # Test driven development Dojo
 
+## Getting started
+
+This project is designed to be edited in [VS Code](https://code.visualstudio.com/) using the [Remote Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension which requires [Docker](https://www.docker.com/products/docker-desktop). Once you have the above three dependencies installed, get latest and reopen the repository in a container.
+
 ## How we got here
 
 ```bash
