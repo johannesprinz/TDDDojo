@@ -2,8 +2,6 @@ variables:
   major: 0
   minor: 0
 
-name: $(major).$(minor)$(Rev:.r)
-
 trigger:
   - main
 
@@ -39,7 +37,7 @@ stages:
       - job: BuildAndTestWindows
         displayName: "Build and test on windows for PR coverage status checks"
         pool:
-          vmImage: ˙'windows-latest'
+          vmImage: "windows-latest"
         steps:
           - task: DotNetCoreCLI@2
             displayName: "Test and publish"
