@@ -34,6 +34,23 @@ stages:
     dependsOn: Versioning
     displayName: "Build and test"
     jobs:
+      - job: BuildAndTestLinux
+        displayName: "Build and test on linux to get full coverage report"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: "Test"
+            inputs:
+              command: "test"
+              publishTestResults: false
+              arguments: '-v=normal /p:CollectCoverage=true  /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\ /p:CoverletOutputFormat=json%2ccobertura /p:MergeWith=$(Build.SourcesDirectory)\TestResults\Coverage\coverage.json'
+          - task: PublishCodeCoverageResults@1
+            displayName: "Publish"
+            inputs:
+              codeCoverageTool: cobertura
+              summaryFileLocation: $(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml
+              reportDirectory: '$(Build.SourcesDirectory)\TestResults\Coverage'
       - job: BuildAndTestWindows
         displayName: "Build and test on windows for PR coverage status checks"
         pool:
@@ -45,19 +62,3 @@ stages:
               command: "test"
               publishTestResults: true
               arguments: '--collect:"Code Coverage"'
-      - job: BuildAndTestLinux
-        displayName: "Build and test on linux to get full coverage report"
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - task: DotNetCoreCLI@2
-            displayName: "Test"
-            inputs:
-              command: "test"
-              arguments: '-v=normal /p:CollectCoverage=true  /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\ /p:CoverletOutputFormat=json%2ccobertura /p:MergeWith=$(Build.SourcesDirectory)\TestResults\Coverage\coverage.json'
-          - task: PublishCodeCoverageResults@1
-            displayName: "Publish"
-            inputs:
-              codeCoverageTool: cobertura
-              summaryFileLocation: $(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml
-              reportDirectory: '$(Build.SourcesDirectory)\TestResults\Coverage'
