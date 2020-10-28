@@ -15,7 +15,7 @@ namespace tests
         [Fact]
         public void Lets_get_started()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
