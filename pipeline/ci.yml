@@ -42,7 +42,7 @@ stages:
           - task: DotNetCoreCLI@2
             displayName: Test
             inputs:
-              publishTestResults: false
+              publishTestResults: true
               command: "test"
               arguments: '-v=normal /p:CollectCoverage=true /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\ /p:CoverletOutputFormat=json%2ccobertura /p:MergeWith=$(Build.SourcesDirectory)\TestResults\Coverage\coverage.json'
           - task: PublishCodeCoverageResults@1
