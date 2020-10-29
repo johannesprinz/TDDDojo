@@ -52,6 +52,7 @@ stages:
               summaryFileLocation: "**/coverage.cobertura.xml"
               reportDirectory: "$(Build.SourcesDirectory)/bin/results/"
       - job: BuildAndTestWindows
+        dependsOn: BuildAndTestLinux
         displayName: "Build and test on windows for PR coverage status checks"
         pool:
           vmImage: "windows-latest"
