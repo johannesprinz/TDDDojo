@@ -37,14 +37,14 @@ stages:
       - job: BuildAndTestLinux
         displayName: "Build and test on linux to get full coverage report"
         pool:
-          vmImage: "ubuntu-latest"
+          vmImage: "windows-latest"
         steps:
           - task: DotNetCoreCLI@2
             displayName: Test
             inputs:
               publishTestResults: true
               command: "test"
-              arguments: '-v=normal --collect:"XPlat Code Coverage"'
+              arguments: '-v=normal --collect:"XPlat Code Coverage" -p:Version=$(Build.BuildNumber) --collect:"Code Coverage"'
           - task: PublishCodeCoverageResults@1
             displayName: Publish
             inputs:
