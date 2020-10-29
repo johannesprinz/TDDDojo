@@ -37,7 +37,7 @@ stages:
       - job: BuildAndTestLinux
         displayName: "Build and test on linux to get full coverage report"
         pool:
-          vmImage: "ubuntu-latest"
+          vmImage: "windows-latest"
         steps:
           - task: DotNetCoreCLI@2
             displayName: Test
