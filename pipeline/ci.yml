@@ -44,13 +44,13 @@ stages:
             inputs:
               command: "test"
               publishTestResults: false
-              arguments: '-v=normal /p:CollectCoverage=true  /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\ /p:CoverletOutputFormat=json%2ccobertura /p:MergeWith=$(Build.SourcesDirectory)\TestResults\Coverage\coverage.json'
+              arguments: '-v=normal /p:CollectCoverage=true  /p:CoverletOutput=$(Build.SourcesDirectory)/bin/results/ /p:CoverletOutputFormat=\"json,cobertura\" /p:MergeWith=$(Build.SourcesDirectory)/bin/results/coverage.json'
           - task: PublishCodeCoverageResults@1
             displayName: "Publish"
             inputs:
               codeCoverageTool: cobertura
-              summaryFileLocation: $(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml
-              reportDirectory: '$(Build.SourcesDirectory)\TestResults\Coverage'
+              summaryFileLocation: "**/coverage.cobertura.xml"
+              reportDirectory: "$(Build.SourcesDirectory)/bin/results/"
       - job: BuildAndTestWindows
         displayName: "Build and test on windows for PR coverage status checks"
         pool:
