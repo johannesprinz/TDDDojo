@@ -51,15 +51,15 @@ stages:
               codeCoverageTool: cobertura
               summaryFileLocation: "**/coverage.cobertura.xml"
               reportDirectory: "$(Build.SourcesDirectory)/bin/results/"
-      - job: BuildAndTestWindows
-        dependsOn: BuildAndTestLinux
-        displayName: "Build and test on windows for PR coverage status checks"
-        pool:
-          vmImage: "windows-latest"
-        steps:
-          - task: DotNetCoreCLI@2
-            displayName: "Test and publish"
-            inputs:
-              command: "test"
-              publishTestResults: true
-              arguments: '--collect:"Code Coverage"'
+      #- job: BuildAndTestWindows
+      #  dependsOn: BuildAndTestLinux
+      #  displayName: "Build and test on windows for PR coverage status checks"
+      #  pool:
+      #    vmImage: "windows-latest"
+      #  steps:
+      #    - task: DotNetCoreCLI@2
+      #      displayName: "Test and publish"
+      #      inputs:
+      #        command: "test"
+      #        publishTestResults: true
+      #        arguments: '--collect:"Code Coverage"'
