@@ -49,8 +49,8 @@ stages:
             displayName: Publish
             inputs:
               codeCoverageTool: cobertura
-              summaryFileLocation: $(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml
-              reportDirectory: '$(Build.SourcesDirectory)\TestResults\Coverage'
+              summaryFileLocation: "**/coverage.cobertura.xml"
+
       #- job: BuildAndTestWindows
       #  dependsOn: BuildAndTestLinux
       #  displayName: "Build and test on windows for PR coverage status checks"
