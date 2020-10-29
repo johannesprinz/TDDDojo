@@ -44,7 +44,7 @@ stages:
             inputs:
               command: "test"
               publishTestResults: false
-              arguments: "-v=normal /p:CollectCoverage=true  /p:CoverletOutput=$(Build.SourcesDirectory)/bin/results/ /p:CoverletOutputFormat=json%2Ccobertura /p:MergeWith=$(Build.SourcesDirectory)/bin/results/coverage.json"
+              arguments: "-v=normal /p:CollectCoverage=true /p:CoverletOutput=$(Build.SourcesDirectory)/bin/results/ /p:CoverletOutputFormat=cobertura"
           - task: PublishCodeCoverageResults@1
             displayName: "Publish"
             inputs:
@@ -62,4 +62,4 @@ stages:
       #      inputs:
       #        command: "test"
       #        publishTestResults: true
-      #        arguments: '--collect:"Code Coverage"'
+      #        arguments: '-p:Version=$(Build.BuildNumber) --collect:"Code Coverage"'
