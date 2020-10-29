@@ -44,7 +44,7 @@ stages:
             inputs:
               publishTestResults: true
               command: "test"
-              arguments: '-v=normal --collect:"XPlat Code Coverage" -p:Version=$(Build.BuildNumber) --collect:"Code Coverage"'
+              arguments: '-v=normal --collect:"XPlat Code Coverage" -p:Version=$(Build.BuildNumber) --collect:"Code Coverage" --settings $(Build.SourcesDirectory)/tests/coverlet.runsettings '
           - task: PublishCodeCoverageResults@1
             displayName: Publish
             inputs:
